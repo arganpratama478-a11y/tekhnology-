@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MechTekhnology - Simulasi Fluida Bernoulli</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+body{background:#081530;color:#cbd5e1;padding:10px}
+.app{max-width:1100px;margin:auto;background:#0f223e;border-radius:16px;border:1px solid #1e3a5f;overflow:hidden}
+</style>
+</head>
+<body>
+<!-- PASTE KODE FINAL YANG UDAH DI FIX -->
+<script>
+// PATCH FIX - GANTI SEMUA SCRIPT LAMA LU DENGAN INI
+function calc(){
+const faEl=document.getElementById('fa'), foEl=document.getElementById('fo');
+let fa=parseFloat(faEl.value)/100; if(isNaN(fa)) fa=0.7;
+let fo=1-fa; foEl.value=Math.round(fo*100);
+document.getElementById('vFa').innerText=Math.round(fa*100); 
+document.getElementById('vFo').innerText=Math.round(fo*100);
+
+const rhoA=parseFloat(document.getElementById('rhoA').value)||1000;
+const rhoO=parseFloat(document.getElementById('rhoO').value)||850;
+const rho = fa*rhoA + fo*rhoO;
+
+const d1mm=parseFloat(document.getElementById('d1').value)||100;
+const d2mm=parseFloat(document.getElementById('d2').value)||50;
+const d1m=d1mm/1000, d2m=d2mm/1000;
+const Q=parseFloat(document.getElementById('Q').value)||0.001;
+if(d1m<=0||d2m<=0||Q<=0){alert("Diameter & Debit harus > 0"); return;}
+
+const A1=Math.PI*d1m*d1m/4, A2=Math.PI*d2m*d2m/4;
+const v1=Q/A1, v2=Q/A2;
+
+const p1k=parseFloat(document.getElementById('p1').value)||200;
+const z1=parseFloat(document.getElementById('z1').value)||0;
+const z2=parseFloat(document.getElementById('z2').value)||0.5;
+const g=9.81;
+const p1Pa=p1k*1000;
+const p2Pa = p1Pa + 0.5*rho*(v1*v1 - v2*v2) + rho*g*(z1 - z2);
+const p2k=p2Pa/1000;
+const dP=p1k-p2k;
+
+document.getElementById('oP1').innerText=p1k.toFixed(1)+' kPa';
+document.getElementById('oV1').innerText=v1.toFixed(3)+' m/s';
+document.getElementById('oP2').innerText=p2k.toFixed(1)+' kPa';
+document.getElementById('oV2').innerText=v2.toFixed(3)+' m/s';
+document.getElementById('rRho').innerText=rho.toFixed(1)+' kg/m³';
+document.getElementById('rA1').innerText=A1.toFixed(6)+' m²';
+document.getElementById('rA2').innerText=A2.toFixed(6)+' m²';
+document.getElementById('rV1').innerText=v1.toFixed(3)+' m/s';
+document.getElementById('rV2').innerText=v2.toFixed(3)+' m/s';
+document.getElementById('rP1').innerText=p1k.toFixed(1)+' kPa';
+document.getElementById('rP2').innerText=p2k.toFixed(1)+' kPa';
+document.getElementById('rDP').innerText=dP.toFixed(2)+' kPa';
+document.getElementById('lD1').innerText=`D₁ = ${d1mm} mm`;
+document.getElementById('lD2').innerText=`D₂ = ${d2mm} mm`;
+
+drawAll(d1mm,d2mm,v1,v2,p1k,p2k);
+}
+// Auto update semua input biar gak perlu pencet tombol
+document.querySelectorAll('input').forEach(el=>{
+el.addEventListener('input', calc);
+el.addEventListener('change', calc);
+});
+</script>
+</body>
+</html>
